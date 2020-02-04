@@ -9,6 +9,7 @@ Snake::Snake(QWidget *parent)
     , ui(new Ui::snake)
 {
     ui->setupUi(this);
+    resize(_WIDTH, _HEIGHT);
     loadImages();
     startTimer(1000);
 }

@@ -23,6 +23,9 @@ protected:
 private:
     Ui::snake *ui;
 
+    static const int _WIDTH = 600;
+    static const int _HEIGHT = 600;
+
     QImage dot;
     QImage target;
 
