@@ -18,8 +18,14 @@ public:
 protected:
     void keyPressEvent(QKeyEvent*);
     void timerEvent(QTimerEvent*);
+    void paintEvent(QPaintEvent*);
 
 private:
     Ui::snake *ui;
+
+    QImage dot;
+    QImage target;
+
+    void loadImages();
 };
 #endif // SNAKE_H
