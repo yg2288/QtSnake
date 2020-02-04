@@ -26,6 +26,9 @@ private:
     QImage dot;
     QImage target;
 
+    enum Direction {UP, DOWN, LEFT, RIGHT};
+    Direction curKey;
+
     void loadImages();
 };
 #endif // SNAKE_H
