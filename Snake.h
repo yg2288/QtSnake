@@ -2,6 +2,7 @@
 #define SNAKE_H
 
 #include <QMainWindow>
+#include <unordered_set>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class snake; }
@@ -17,14 +18,21 @@ public:
 
 protected:
     enum Direction {UP, DOWN, LEFT, RIGHT};
+    struct qpoint_hash
+    {
+        std::size_t operator () (const QPoint& point) const;
+    };
 
     void keyPressEvent(QKeyEvent*);
     void timerEvent(QTimerEvent*);
     void paintEvent(QPaintEvent*);
     void initializeGame();
     QPoint randomPoint();
+    QPoint getNextPos(QPoint, Direction);
     bool isValidMove(QPoint, Direction);
     void makeMove();
+    void endGame();
+    void updateDir();
 
 private:
     Ui::snake *ui;
@@ -42,6 +50,7 @@ private:
 
     QPoint curTarget;
     std::list<QPoint> snakePos;
+    std::unordered_set<QPoint, qpoint_hash> occupied;
 
     void loadImages();
 };

@@ -53,6 +53,7 @@ void Snake::keyPressEvent(QKeyEvent* e)
 void Snake::timerEvent(QTimerEvent* e)
 {
     // std::cout << "Timer event" << e->timerId() << std::endl;
+    makeMove();
     update();
     // std::cout << curKey << std::endl;
 }
@@ -72,6 +73,15 @@ void Snake::paintEvent(QPaintEvent* e)
     p.drawImage(curTarget, target);
 }
 
+std::size_t Snake::qpoint_hash::operator()(const QPoint& point) const
+{
+    std::size_t h1 = std::hash<int>()(point.x());
+    std::size_t h2 = std::hash<int>()(point.y());
+
+    return h1 ^ h2;
+}
+
+
 void Snake::initializeGame()
 {
     // Clear drawings
@@ -80,6 +90,8 @@ void Snake::initializeGame()
     QPoint initSnake = randomPoint();
     snakePos.clear();
     snakePos.push_front(initSnake);
+    occupied.clear();
+    occupied.insert(initSnake);
     // Setup random target
     curTarget = randomPoint();
     while (curTarget == initSnake)
@@ -99,7 +111,7 @@ QPoint Snake::randomPoint()
     return {_w*dot.width(), _h*dot.height()};
 }
 
-bool Snake::isValidMove(QPoint pos, Direction d)
+QPoint Snake::getNextPos(QPoint pos, Direction d)
 {
     int dx{}, dy{};
     switch (d)
@@ -117,13 +129,59 @@ bool Snake::isValidMove(QPoint pos, Direction d)
             dx = dot.width();
             break;
     }
-    if (pos.x()+dx < 0 || pos.x()+dx == _WIDTH ||
-        pos.y()+dy < 0 || pos.y()+dy == _HEIGHT)
+    QPoint nPos{pos.x()+dx, pos.y()+dy};
+    return nPos;
+}
+
+bool Snake::isValidMove(QPoint pos, Direction d)
+{
+    // check for out of boundary
+    QPoint nPos = getNextPos(pos, d);
+    if (nPos.x() < 0 || nPos.x() == _WIDTH ||
+        nPos.y() < 0 || nPos.y() == _HEIGHT)
+        return false;
+    // check for collision with self
+    if (occupied.count(nPos) > 0)
         return false;
     return true;
 }
 
 void Snake::makeMove()
 {
+    // makes move and either continues game or ends game
+    updateDir();
+    QPoint head = snakePos.front();
+    if (!isValidMove(head, curDir)) {
+        endGame();
+        return;
+    }
+    QPoint nPos = getNextPos(head, curDir);
+    snakePos.push_front(nPos);
+    occupied.insert(nPos);
+    // check for target
+    if (nPos == curTarget) {
+        // TODO : check for won game - no more targets
+        curTarget = randomPoint();
+        while (occupied.count(curTarget) > 0)
+            curTarget = randomPoint();
+    } else {
+        occupied.erase(snakePos.back());
+        snakePos.pop_back();
+    }
+}
 
+void Snake::updateDir()
+{
+    if ((curDir == UP && curKey == DOWN) ||
+        (curDir == DOWN && curKey == UP) ||
+        (curDir == RIGHT && curKey == LEFT) ||
+        (curDir == LEFT && curKey == RIGHT) ||
+        (curDir == curKey))
+        return;
+    curDir = curKey;
+}
+
+void Snake::endGame()
+{
+    killTimer(timerId);
 }
