@@ -16,11 +16,15 @@ public:
     ~Snake();
 
 protected:
+    enum Direction {UP, DOWN, LEFT, RIGHT};
+
     void keyPressEvent(QKeyEvent*);
     void timerEvent(QTimerEvent*);
     void paintEvent(QPaintEvent*);
     void initializeGame();
     QPoint randomPoint();
+    bool isValidMove(QPoint, Direction);
+    void makeMove();
 
 private:
     Ui::snake *ui;
@@ -28,12 +32,16 @@ private:
     static const int _WIDTH = 600;
     static const int _HEIGHT = 600;
 
+    int timerId;
+
     QImage dot;
     QImage target;
 
-    enum Direction {UP, DOWN, LEFT, RIGHT};
     Direction curKey;
     Direction curDir;
+
+    QPoint curTarget;
+    std::list<QPoint> snakePos;
 
     void loadImages();
 };

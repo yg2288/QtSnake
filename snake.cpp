@@ -11,7 +11,8 @@ Snake::Snake(QWidget *parent)
     ui->setupUi(this);
     resize(_WIDTH, _HEIGHT);
     loadImages();
-    startTimer(1000);
+    initializeGame();
+    timerId = startTimer(1000);
 }
 
 Snake::~Snake()
@@ -66,8 +67,9 @@ void Snake::loadImages()
 void Snake::paintEvent(QPaintEvent* e)
 {
     QPainter p{this};
-    QPoint point{0, 0};
-    p.drawImage(point, dot);
+    for (auto pos : snakePos)
+        p.drawImage(pos, dot);
+    p.drawImage(curTarget, target);
 }
 
 void Snake::initializeGame()
@@ -75,10 +77,19 @@ void Snake::initializeGame()
     // Clear drawings
     // Reset timer
     // Setup random dot
+    QPoint initSnake = randomPoint();
+    snakePos.clear();
+    snakePos.push_front(initSnake);
     // Setup random target
-    // Initialize snake list
+    curTarget = randomPoint();
+    while (curTarget == initSnake)
+        curTarget = randomPoint();
     // Setup valid initial direction
+    curDir = static_cast<Direction>(rand() % 4);
+    while (!isValidMove(initSnake, curDir))
+        curDir = static_cast<Direction>(rand() % 4);
     // Setup initial key direction
+    curKey = curDir;
 }
 
 QPoint Snake::randomPoint()
@@ -86,4 +97,33 @@ QPoint Snake::randomPoint()
     int _w = rand() % (_WIDTH / dot.width());
     int _h = rand() % (_HEIGHT / dot.height());
     return {_w*dot.width(), _h*dot.height()};
+}
+
+bool Snake::isValidMove(QPoint pos, Direction d)
+{
+    int dx{}, dy{};
+    switch (d)
+    {
+        case UP:
+            dy = -dot.width();
+            break;
+        case DOWN:
+            dy = dot.width();
+            break;
+        case LEFT:
+            dx = -dot.width();
+            break;
+        case RIGHT:
+            dx = dot.width();
+            break;
+    }
+    if (pos.x()+dx < 0 || pos.x()+dx == _WIDTH ||
+        pos.y()+dy < 0 || pos.y()+dy == _HEIGHT)
+        return false;
+    return true;
+}
+
+void Snake::makeMove()
+{
+
 }
