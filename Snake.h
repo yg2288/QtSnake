@@ -19,6 +19,8 @@ protected:
     void keyPressEvent(QKeyEvent*);
     void timerEvent(QTimerEvent*);
     void paintEvent(QPaintEvent*);
+    void initializeGame();
+    QPoint randomPoint();
 
 private:
     Ui::snake *ui;
@@ -31,6 +33,7 @@ private:
 
     enum Direction {UP, DOWN, LEFT, RIGHT};
     Direction curKey;
+    Direction curDir;
 
     void loadImages();
 };

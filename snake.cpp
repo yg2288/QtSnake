@@ -66,6 +66,24 @@ void Snake::loadImages()
 void Snake::paintEvent(QPaintEvent* e)
 {
     QPainter p{this};
-    QPointF point{10, 10};
+    QPoint point{0, 0};
     p.drawImage(point, dot);
+}
+
+void Snake::initializeGame()
+{
+    // Clear drawings
+    // Reset timer
+    // Setup random dot
+    // Setup random target
+    // Initialize snake list
+    // Setup valid initial direction
+    // Setup initial key direction
+}
+
+QPoint Snake::randomPoint()
+{
+    int _w = rand() % (_WIDTH / dot.width());
+    int _h = rand() % (_HEIGHT / dot.height());
+    return {_w*dot.width(), _h*dot.height()};
 }
