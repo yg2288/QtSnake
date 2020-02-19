@@ -141,8 +141,10 @@ bool Snake::isValidMove(QPoint pos, Direction d)
         nPos.y() < 0 || nPos.y() == _HEIGHT)
         return false;
     // check for collision with self
+    occupied.erase(snakePos.back());
     if (occupied.count(nPos) > 0)
         return false;
+    occupied.insert(snakePos.back());
     return true;
 }
 
