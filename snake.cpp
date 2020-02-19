@@ -3,6 +3,8 @@
 #include <iostream>
 #include <QKeyEvent>
 #include <QPainter>
+#include <QMessageBox>
+#include <QPushButton>
 
 Snake::Snake(QWidget *parent)
     : QMainWindow(parent)
@@ -186,4 +188,14 @@ void Snake::updateDir()
 void Snake::endGame()
 {
     killTimer(timerId);
+    QMessageBox msgBox;
+    QPushButton *restartButton = msgBox.addButton(tr("Restart"), QMessageBox::ButtonRole::DestructiveRole);
+    msgBox.setText("Game Over!");
+    msgBox.exec();
+    if (msgBox.clickedButton() == restartButton) {
+        initializeGame();
+        timerId = startTimer(1000);
+    } else {
+        this->close();
+    }
 }
