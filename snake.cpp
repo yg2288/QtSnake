@@ -189,6 +189,7 @@ void Snake::endGame()
 {
     killTimer(timerId);
     QMessageBox msgBox;
+    msgBox.setStandardButtons(QMessageBox::Ok);
     QPushButton *restartButton = msgBox.addButton(tr("Restart"), QMessageBox::ButtonRole::DestructiveRole);
     msgBox.setText("Game Over!");
     msgBox.exec();
