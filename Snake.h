@@ -34,8 +34,12 @@ protected:
     void endGame();
     void updateDir();
 
+public slots:
+    void resetGame();
+
 private:
     Ui::snake *ui;
+    QMenu *gameMenu;
 
     static const int _WIDTH = 600;
     static const int _HEIGHT = 600;
@@ -53,5 +57,6 @@ private:
     std::unordered_set<QPoint, qpoint_hash> occupied;
 
     void loadImages();
+    void createMenus();
 };
 #endif // SNAKE_H

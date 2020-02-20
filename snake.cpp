@@ -11,6 +11,7 @@ Snake::Snake(QWidget *parent)
     , ui(new Ui::snake)
 {
     ui->setupUi(this);
+    createMenus();
     resize(_WIDTH, _HEIGHT);
     loadImages();
     initializeGame();
@@ -199,4 +200,22 @@ void Snake::endGame()
     } else {
         this->close();
     }
+}
+
+void Snake::resetGame()
+{
+    killTimer(timerId);
+    initializeGame();
+    timerId = startTimer(1000);
+}
+
+void Snake::createMenus()
+{
+    gameMenu = menuBar()->addMenu(tr("Game"));
+    QAction *newGame = gameMenu->addAction(tr("New Game"));
+    QAction *closeGame = gameMenu->addAction(tr("Close"));
+    connect(newGame, &QAction::triggered,
+            this, &Snake::resetGame);
+    connect(closeGame, &QAction::triggered,
+            this, &Snake::close);
 }
