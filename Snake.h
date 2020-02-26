@@ -28,8 +28,8 @@ protected:
     void paintEvent(QPaintEvent*);
     void initializeGame();
     QPoint randomPoint();
-    QPoint getNextPos(QPoint, Direction);
-    bool isValidMove(QPoint, Direction);
+    QPoint getNextPos(const QPoint&, Direction);
+    bool isValidMove(const QPoint&, Direction);
     void makeMove();
     void endGame();
     void updateDir();

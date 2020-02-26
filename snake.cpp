@@ -114,7 +114,7 @@ QPoint Snake::randomPoint()
     return {_w*dot.width(), _h*dot.height()};
 }
 
-QPoint Snake::getNextPos(QPoint pos, Direction d)
+QPoint Snake::getNextPos(const QPoint& pos, Direction d)
 {
     int dx{}, dy{};
     switch (d)
@@ -136,7 +136,7 @@ QPoint Snake::getNextPos(QPoint pos, Direction d)
     return nPos;
 }
 
-bool Snake::isValidMove(QPoint pos, Direction d)
+bool Snake::isValidMove(const QPoint& pos, Direction d)
 {
     // check for out of boundary
     QPoint nPos = getNextPos(pos, d);
