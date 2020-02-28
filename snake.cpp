@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QInputDialog>
 
 Snake::Snake(QWidget *parent)
     : QMainWindow(parent)
@@ -15,7 +16,7 @@ Snake::Snake(QWidget *parent)
     resize(_WIDTH, _HEIGHT);
     loadImages();
     initializeGame();
-    timerId = startTimer(1000);
+    timerId = startTimer(gameSpeed);
 }
 
 Snake::~Snake()
@@ -195,8 +196,7 @@ void Snake::endGame()
     msgBox.setText("Game Over!");
     msgBox.exec();
     if (msgBox.clickedButton() == restartButton) {
-        initializeGame();
-        timerId = startTimer(1000);
+        resetGame();
     } else {
         this->close();
     }
@@ -206,16 +206,28 @@ void Snake::resetGame()
 {
     killTimer(timerId);
     initializeGame();
-    timerId = startTimer(1000);
+    timerId = startTimer(gameSpeed);
+}
+
+void Snake::setSpeedDialog()
+{
+    bool ok;
+    int speed = QInputDialog::getInt(this, tr("Set snake speed"),
+                                     tr("Snake speed:"), gameSpeed, 1, 1000, 1, &ok);
+    if (ok)
+        gameSpeed = speed;
 }
 
 void Snake::createMenus()
 {
     gameMenu = menuBar()->addMenu(tr("Game"));
     QAction *newGame = gameMenu->addAction(tr("New Game"));
+    QAction *setSpeed = gameMenu->addAction(tr("Set Speed"));
     QAction *closeGame = gameMenu->addAction(tr("Close"));
     connect(newGame, &QAction::triggered,
             this, &Snake::resetGame);
+    connect(setSpeed, &QAction::triggered,
+            this, &Snake::setSpeedDialog);
     connect(closeGame, &QAction::triggered,
             this, &Snake::close);
 }

@@ -36,6 +36,7 @@ protected:
 
 public slots:
     void resetGame();
+    void setSpeedDialog();
 
 private:
     Ui::snake *ui;
@@ -45,6 +46,7 @@ private:
     static const int _HEIGHT = 600;
 
     int timerId;
+    int gameSpeed = 1000;
 
     QImage dot;
     QImage target;
